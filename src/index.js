@@ -538,13 +538,15 @@ async function sendMessage(accessToken, userid, template_id, base_url, title, co
   // Format the date to 'YYYY-MM-DD HH:MM:SS' string
   const date = beijingTime.toISOString().slice(0, 19).replace('T', ' ');
 
-  const encoded_message = encodeURIComponent(content);
+  const encoded_message = encodeURIComponent(content.replace(/\r?\n/g, '@#'));
   const encoded_date = encodeURIComponent(date);
+
+  const separator = base_url.includes('?') ? '&' : '?';
 
   const payload = {
     touser: userid,
     template_id: template_id,
-    url: `${base_url}?message=${encoded_message}&date=${encoded_date}&title=${encodeURIComponent(title)}`,
+    url: `${base_url}${separator}message=${encoded_message}&date=${encoded_date}&title=${encodeURIComponent(title)}`,
     data: {
       title: { value: title },
       content: { value: content }
